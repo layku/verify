@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: service-auth
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      maxRequestSize: 1000MB
+      
+#system
+server:
+  port: 1002
+  tomcat:
+    basedir: /data/verify/temp/
+
+#mybatis
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+#logback
+logging:
+  config: classpath:config/logback-spring.xml
+
+
+

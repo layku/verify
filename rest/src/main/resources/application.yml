@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: rest
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      maxRequestSize: 1000MB
+server:
+  port: 8888
+  tomcat:
+    basedir: /data/verify/temp/
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds:5000
+        timeout:
+          enabled: true
+feign:
+  hystrix:
+    enabled: true
+
+#logback
+logging:
+  config: classpath:config/logback-spring.xml
+
+
+

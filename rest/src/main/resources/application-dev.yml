@@ -1,0 +1,29 @@
+spring:
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: redis.test.6379
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: rest
+  client:
+    service-url:
+      defaultZone: http://localhost:1000/eureka/
+
+gateway:
+  host: http://localhost:2000
+  auth-user:
+    path:  /service-auth
+    name: gateway-auth-user
+  file:
+    path: /service-file
+    name: gateway-file

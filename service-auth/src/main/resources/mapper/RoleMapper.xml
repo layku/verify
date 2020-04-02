@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloud.auth.mapper.RoleMapper">
+
+    <insert id="insert" parameterType="map">
+        insert into t_auth_role(name,state,system)
+        values(#{name},#{state},0);
+    </insert>
+
+    <update id="update" parameterType="map">
+        update t_auth_role t
+        <set>
+            <if test="name != null and name != ''">
+                t.name = #{name},
+            </if>
+            <if test="state != null and state != ''">
+                t.state = #{state},
+            </if>
+        </set>
+        where t.id = #{id}
+    </update>
+
+    <select id="list" parameterType="map" resultType="map">
+        select
+        t.id,
+        t.name,
+        t.system,
+        t.state,
+        (select count(1) from t_auth_user_role x where x.role_id = t.id) userCnt,
+        (select count(1) from t_auth_role_permission x where x.role_id = t.id) permissionCnt
+        from t_auth_role t
+        where t.state between 0 and 1
+        <if test="name != null and name != ''">
+            and t.name like concat('%',#{name},'%')
+        </if>
+        <if test="state != null and state != ''">
+            and t.state = #{state}
+        </if>
+        order by t.id desc
+        limit #{start},#{num}
+    </select>
+
+    <select id="count" parameterType="map" resultType="long">
+        select count(1)
+        from t_auth_role t
+        where t.state between 0 and 1
+        <if test="name != null and name != ''">
+            and t.name like concat('%',#{name},'%')
+        </if>
+        <if test="state != null and state != ''">
+            and t.state = #{state}
+        </if>
+    </select>
+
+    <select id="simpleList" parameterType="map" resultType="map">
+        select
+        t.id value,
+        t.name title
+        from t_auth_role t
+        where t.state = 1
+    </select>
+
+</mapper>

@@ -1,0 +1,25 @@
+spring:
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: redis.test.6379
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    # 每隔5s发送一次心跳
+    lease-renewal-interval-in-seconds: 5
+    # 告知服务端10秒还未收到心跳的话，就将该服务移除列表
+    lease-expiration-duration-in-seconds: 10
+    instance-id: gateway
+  client:
+    service-url:
+      defaultZone: http://localhost:1000/eureka/
+    registry-fetch-interval-seconds: 1

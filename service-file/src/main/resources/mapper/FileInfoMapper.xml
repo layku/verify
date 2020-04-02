@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.layku.verify.service.file.mapper.FileMapper">
+
+    <insert id="insert" parameterType="map">
+        insert into t_file_info(real_name,name,system,type,uri,md5,size,content_type,create_time,year,month,day)
+        values(#{realName},#{name},#{system},#{type},#{uri},#{md5},#{size},#{contentType},#{createTime},#{year},#{month},#{day});
+    </insert>
+
+    <update id="update" parameterType="map">
+        update t_file_info t
+        <set>
+            <if test="system != null and system != ''">
+                t.system = #{system},
+            </if>
+            <if test="type != null and type != ''">
+                t.type = #{type},
+            </if>
+        </set>
+        where t.id = #{id}
+    </update>
+
+    <select id="get" parameterType="map" resultType="map">
+        select
+        t.id,
+        t.real_name realName,
+        t.name,
+        t.system,
+        t.type,
+        t.uri,
+        t.md5,
+        t.size,
+        t.content_type contentType,
+        from_unixtime(t.create_time,'%Y-%m-%d %H:%i:%s') createTime
+        from t_file_info t
+        where 1 = 1
+        <if test="md5 != null and md5 != ''">
+            and t.md5 = #{md5}
+        </if>
+        limit 1
+    </select>
+
+</mapper>

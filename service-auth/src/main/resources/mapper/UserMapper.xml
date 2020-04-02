@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cloud.auth.mapper.UserMapper">
+
+    <select id="login" parameterType="map" resultType="map">
+        select
+        t.id,
+        t.account,
+        t.state,
+        t1.name,
+        t1.create_time createTime
+        from t_auth_user t
+        left join t_auth_user_info t1
+        on t.id = t1.user_id
+        where t.state between 0 and 1
+        and t.account=#{account}
+        and t.password=#{password}
+        order by t.id desc
+        limit 1
+    </select>
+
+    <insert id="insert" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        insert into t_auth_user(account,password,state,system)
+        values(#{account},#{password},1,0);
+    </insert>
+
+    <insert id="insertUser" parameterType="map">
+        insert into t_auth_user_info(name,user_id,create_time)
+        values(#{name},#{userId},#{createTime});
+    </insert>
+
+    <update id="update" parameterType="map">
+        update t_auth_user t
+        <set>
+            <if test="password != null and password != ''">
+                t.password = #{password},
+            </if>
+            <if test="state != null and state != ''">
+                t.state = #{state},
+            </if>
+        </set>
+        where t.id = #{userId}
+    </update>
+
+    <update id="updateUser" parameterType="map">
+        update t_auth_user_info t
+        <set>
+            <if test="name != null and name != ''">
+                t.name = #{name},
+            </if>
+        </set>
+        where t.user_id = #{userId}
+    </update>
+
+    <select id="list" parameterType="map" resultType="map">
+        select
+        t.id,
+        t.account,
+        t.state,
+        t.system,
+        (select group_concat(x.name) from t_auth_role x where x.id in (select y.role_id from t_auth_user_role y where y.user_id = t.id)) userRole,
+        t1.name,
+        from_unixtime(t1.create_time,'%Y-%m-%d %H:%i:%s') createTime
+        from t_auth_user t
+        left join t_auth_user_info t1
+        on t.id = t1.user_id
+        where t.state between 0 and 1
+        <if test="name != null and name != ''">
+            and t1.name like concat('%',#{name},'%')
+        </if>
+        <if test="account != null and account != ''">
+            and t.account like concat('%',#{account},'%')
+        </if>
+        <if test="state != null and state != ''">
+            and t.state = #{state}
+        </if>
+        order by t.id desc
+        limit #{start},#{num}
+    </select>
+
+    <select id="count" parameterType="map" resultType="long">
+        select count(1) from t_auth_user t
+        left join t_auth_user_info t1
+        on t.id = t1.user_id
+        where t.state between 0 and 1
+        <if test="name != null and name != ''">
+            and t1.name like concat('%',#{name},'%')
+        </if>
+        <if test="account != null and account != ''">
+            and t.account like concat('%',#{account},'%')
+        </if>
+        <if test="state != null and state != ''">
+            and t.state = #{state}
+        </if>
+    </select>
+
+    <select id="listPermissionByUserId" resultType="map">
+        select
+        t.id,
+        t.name,
+        t.code,
+        t.url,
+        t.parent_id parentId,
+        t.menu,
+        (select count(1) from t_auth_permission x where x.parent_id=t.id) ownChildren
+        from t_auth_permission t
+        where t.state = 1
+        and t.id in (select a.permission_id from t_auth_role_permission a
+        where a.role_id in (select b.role_id from t_auth_user_role b
+        where b.user_id = #{userId}))
+        order by t.menu desc,t.parent_id,t.order_view
+    </select>
+
+</mapper>
