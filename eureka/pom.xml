@@ -7,9 +7,8 @@
         <artifactId>verify</artifactId>
         <version>1.0.0</version>
     </parent>
-    <groupId>cn.layku.verify</groupId>
     <artifactId>eureka</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>eureka</name>
     <packaging>jar</packaging>
     <description>eureka服务器</description>
