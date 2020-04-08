@@ -2,8 +2,6 @@ server:
   port: 1000
 
 eureka:
-  server:
-    my-url: null
   instance:
     hostname: localhost
   client:

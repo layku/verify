@@ -14,10 +14,6 @@ spring:
 eureka:
   instance:
     prefer-ip-address: true
-    # 每隔5s发送一次心跳
-    lease-renewal-interval-in-seconds: 5
-    # 告知服务端10秒还未收到心跳的话，就将该服务移除列表
-    lease-expiration-duration-in-seconds: 10
     instance-id: gateway
   client:
     service-url:

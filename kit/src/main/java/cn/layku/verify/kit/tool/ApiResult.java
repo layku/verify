@@ -1,6 +1,12 @@
 package cn.layku.verify.kit.tool;
 
+import cn.layku.verify.kit.constant.ApiCodeConstant;
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * @author dongdingzhuo
@@ -10,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * @date 2020/4/2 10:07
  */
 public class ApiResult {
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private int code;
 
@@ -60,6 +67,19 @@ public class ApiResult {
         return failResult(500, message);
     }
 
+    public static void responseResult(HttpServletResponse response, int code, String msessage) {
+        PrintWriter out;
+        try {
+            response.setContentType("application/json;charset=UTF-8");
+            out = response.getWriter();
+            out.write(JSON.toJSONString(failResult(code, msessage)));
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static ApiResult failResult(int code, String message) {
         return new ApiResult(code, message);
     }
@@ -95,4 +115,5 @@ public class ApiResult {
     public void setCount(Long count) {
         this.count = count;
     }
+
 }
