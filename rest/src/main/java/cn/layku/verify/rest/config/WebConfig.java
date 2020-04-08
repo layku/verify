@@ -1,6 +1,7 @@
 package cn.layku.verify.rest.config;
 
 import cn.layku.verify.rest.interceptor.AccessTokenInterceptor;
+import cn.layku.verify.rest.interceptor.IpBlackListInterceptor;
 import cn.layku.verify.rest.interceptor.RequestInterceptor;
 import cn.layku.verify.rest.interceptor.TokenInterceptor;
 import org.springframework.context.annotation.Bean;
@@ -23,11 +24,17 @@ public class WebConfig implements WebMvcConfigurer {
         return new TokenInterceptor();
     }
 
+    @Bean
+    public IpBlackListInterceptor ipBlackListInterceptor() {
+        return new IpBlackListInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new RequestInterceptor());
         registry.addInterceptor(new AccessTokenInterceptor());
         registry.addInterceptor(tokenInterceptor());
+        registry.addInterceptor(ipBlackListInterceptor());
     }
 }
 

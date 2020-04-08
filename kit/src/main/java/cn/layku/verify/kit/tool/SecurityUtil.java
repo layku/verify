@@ -1,7 +1,8 @@
 package cn.layku.verify.kit.tool;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
+
+import org.springframework.util.Base64Utils;
+import org.springframework.util.DigestUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -30,7 +31,7 @@ public class SecurityUtil {
      * @return
      */
     public static String toMd5(String str) {
-        return DigestUtils.md5Hex(str);
+        return DigestUtils.md5DigestAsHex(str.getBytes());
     }
 
     /**
@@ -40,10 +41,10 @@ public class SecurityUtil {
      * @return
      */
     public static String toBase64(String str) {
-        byte[] b = new byte[0];
+        byte[] b;
         String result = null;
         try {
-            b = Base64.encodeBase64(str.getBytes(ENCODING));
+            b = Base64Utils.encode(str.getBytes(ENCODING));
             result = new String(b, ENCODING);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -60,7 +61,7 @@ public class SecurityUtil {
     public static String fromBase64(String str) {
         String result = null;
         try {
-            byte[] b = Base64.decodeBase64(str.getBytes(ENCODING));
+            byte[] b = Base64Utils.decode(str.getBytes(ENCODING));
             result = new String(b, ENCODING);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

@@ -17,5 +17,7 @@ public class ApiCodeConstant {
     public static final int USER_AUTH_FAIL = 103;
     //响应超时
     public static final int RESP_TIME_OUT = 104;
+    //访问频繁
+    public static final int ACCESS_OFTER = 105;
 
 }
